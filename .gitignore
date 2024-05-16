@@ -42,8 +42,6 @@ Thumbs.db
 *.app
 *.exe
 *.war
-*.yaml
-*.yml
 
 # Large media files
 *.mp4

@@ -1,0 +1,26 @@
+definitions:
+  steps:
+    - step: &package_dependencies
+        name: Package Dependencies
+        image: atlassian/default-image:2
+        script:
+          - make build
+        artifacts:
+          - dist/**
+
+    - step: &deploy_s3
+        oidc: true
+        name: Deploy to AWS S3
+        script:
+          - pipe: atlassian/aws-s3-deploy:1.6.0
+            variables:
+              AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+              AWS_OIDC_ROLE_ARN: $AWS_OIDC_ROLE_ARN
+              S3_BUCKET: $AWS_DEPLOY_BUCKET
+              LOCAL_PATH: "$(pwd)/dist"
+
+pipelines:
+  tags:
+    v*:
+      - step: *package_dependencies
+      - step: *deploy_s3

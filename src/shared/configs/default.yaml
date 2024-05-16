@@ -1,0 +1,46 @@
+context:
+  - product_ids
+  - store_ids
+  - sellout_id
+  - city_ids
+
+queries:
+  - name: Sales
+    path: shared.queries.AggProductSales
+  
+  - name: AvgWeather
+    path: shared.queries.AvgWeather
+    
+stages:
+
+  - name: DateSplitter
+    path: shared.preprocessing.DateSplitter
+
+  - name: MonthEncoder
+    path: shared.preprocessing.CyclicalEncoder
+    kwargs:
+      col: month
+      period: 12
+
+  - name: DayofweekEncoder
+    path: shared.preprocessing.CyclicalEncoder
+    kwargs:
+      col: dayofweek
+      period: 7
+
+  - name: MoneyOverSales
+    path: shared.preprocessing.TryDivide
+    kwargs:
+      num: money 
+      den: sales
+      newcol: price
+
+
+loaders:
+      
+  
+
+  
+
+
+
