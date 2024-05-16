@@ -1,4 +1,4 @@
 build:
-	mkdir -p ./dist
-	cp ./src/entrypoint.py ./dist
-	cd ./src && zip -x entrypoint.py -r ../dist/jobs.zip .
+	mkdir ./dist
+	cp ./src/main.py ./dist
+	cd ./src && zip -x main.py -r ../dist/jobs.zip .

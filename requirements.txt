@@ -1,0 +1,12 @@
+redshift_connector
+sqlalchemy-redshift
+sqlalchemy
+click
+pyspark
+pypika
+pandas
+pydantic_settings
+python-dotenv
+sparkml_base_classes
+pyyaml
+psycopg2
