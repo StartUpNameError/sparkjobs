@@ -14,16 +14,14 @@ class DBEngine:
     """Container for db engine related attributes.
 
     Each database engine (e.g., redshift, postgres, mysql) has different drivernames
-    depending on the query executor (e.g., sqlalchemy, spark).
-
-    In adittion, different spark options apply depending on the database engine
-    (e.g., redshift, postgres, mysql) being used.
+    depending on the query executor (e.g., sqlalchemy, spark) and possibly 
+    different spark options.
     """
 
     drivers: dict[str, str]
     spark: dict[str, str]
 
-    def get_driver(self, name: str) -> str | None:
+    def get_drivername(self, name: str) -> str | None:
         return self.drivers.get(name)
 
     @property

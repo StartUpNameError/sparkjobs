@@ -2,7 +2,7 @@
     {
         "name": "redshift",
         "drivers": {
-            "alchemy": "redshift+redshift_connector",
+            "sqlalchemy": "redshift+redshift_connector",
             "jdbc": "jdbc:redshift:iam"
         },
         "spark": {
@@ -15,7 +15,7 @@
     {
         "name": "postgres",
         "drivers": {
-            "alchemy": "postgresql",
+            "sqlalchemy": "postgresql",
             "jdbc": "jdbc:postgresql"
         },
         "spark": {
