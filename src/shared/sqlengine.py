@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pandas import DataFrame as PandasDataFrame
 from pyspark.sql import DataFrame as SparkDataFrame
 
-from shared.connection import Connection
+from shared.url import URL
 
 DataFrame = PandasDataFrame | SparkDataFrame
 
@@ -22,10 +22,15 @@ class SQLEngine(abc.ABC):
 
      . note::
         This class should not be used directly. Use derived classes instead.
+
+    Parameters
+    ----------
+    url : URL
+        Represents the components of a URL used to connect to a database.
     """
 
-    def __init__(self, connection: Connection):
-        self.connection = connection
+    def __init__(self, url: URL):
+        self.url = url
 
     @abc.abstractmethod
     def read_sql(self, sql: str) -> SQLResponse:

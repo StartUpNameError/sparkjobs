@@ -1,21 +1,18 @@
-from __future__ import annotations
-
 import abc
 from typing import Literal, Protocol
 
-from shared.connection import Connection
 from shared.sqlengine import SQLEngine, SQLResponse
 from shared.sqlengines import get_sql_engine
+from shared.url import URL
 
 
-class ConnectionFactory(Protocol):
-    """Connection factory interface.
+class URLFactory(Protocol):
+    """URL factory interface.
 
-    Any ConnectionFactory must be a no args callable that returns a Connection
-    object.
+    In words, a URLFactory must be a no args callable that returns a URL object.
     """
 
-    def __call__(self) -> Connection:
+    def __call__(self) -> URL:
         pass
 
 
@@ -30,19 +27,19 @@ class Query(abc.ABC):
 
     Parameters
     ----------
-    connection_factory : ConnectionFactory
-        No args :class:`Connection` factory.
+    url_factory : URLFactory
+        No args :class:`URL` factory.
     """
 
-    def __init__(self, connection_factory: ConnectionFactory):
-        self.connection_factory = connection_factory
+    def __init__(self, url_factory: URLFactory):
+        self.url_factory = url_factory
 
     def execute(
         self,
         engine: Literal["spark", "pandas", "glue"] = "spark",
     ) -> SQLResponse:
-        sql_engine = get_sql_engine(engine)
-        sql_engine: SQLEngine = sql_engine(connection=self.connection_factory())
+
+        sql_engine: SQLEngine = get_sql_engine(engine)(url=self.url_factory())
         return sql_engine.read_sql(sql=self.create_sql())
 
     @abc.abstractmethod

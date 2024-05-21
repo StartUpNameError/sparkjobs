@@ -94,7 +94,7 @@ class URL:
             ) -> str:
                 ...
 
-            If None, the typical template of a database URL is used:
+            If None, the typical form of a database URL is used which is,
             "{drivername}://{username}:{password}@{host}:{port}/{database}"
 
 
