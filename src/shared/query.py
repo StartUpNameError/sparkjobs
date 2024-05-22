@@ -1,7 +1,7 @@
 import abc
-from typing import Literal, Protocol
+from typing import Any, Literal, Protocol
 
-from shared.sqlengine import SQLEngine, SQLResponse
+from shared.sqlengine import SQLEngine, SQLParams, SQLResponse
 from shared.sqlengines import get_sql_engine
 from shared.url import URL
 
@@ -36,11 +36,26 @@ class Query(abc.ABC):
 
     def execute(
         self,
-        engine: Literal["spark", "pandas", "glue"] = "spark",
+        engine: Literal["spark", "pandas", "glue"] | SQLEngine = "spark",
+        engine_config: dict[str, Any] | None = None,
     ) -> SQLResponse:
+        """Executes query through specified engine.
 
-        sql_engine: SQLEngine = get_sql_engine(engine)(url=self.url_factory())
-        return sql_engine.read_sql(sql=self.create_sql())
+        Parameters
+        ----------
+        engine : str or SQLEngine
+            Engine for executing the query.
+
+        engine_config : dict or None
+            Engine configuration.
+        """
+
+        url = self.url_factory()
+        query = self.create_sql()
+        sql_engine = get_sql_engine(name=engine, initargs=engine_config)
+
+        sql_params = SQLParams(url=url, query=query)
+        return sql_engine.read_sql(sql_params=sql_params)
 
     @abc.abstractmethod
     def create_sql(self) -> str:

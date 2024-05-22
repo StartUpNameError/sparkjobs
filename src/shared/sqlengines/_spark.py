@@ -1,26 +1,54 @@
-from pyspark.sql import DataFrameReader, SparkSession
+from pyspark.sql import DataFrame, SparkSession
+from pyspark.sql.types import StructType
 
-from shared.settings import SparkSettings, conf
-from shared.sqlengine import SQLEngine, SQLResponse
+from shared.settings import conf
+from shared.sqlengine import SQLEngine, SQLParams, SQLResponse
 
-settings: SparkSettings = conf.get_spark_settings()
+settings = conf.get_spark_settings()
+jdbcTemplate = "{drivername}://{host}:{port}/{database}?user={username}&password={password}"
 
 
 class SparkSQLEngine(SQLEngine):
-    """Lets you query structured data inside Spark programs."""
+    """Lets you query structured data inside Spark programs.
 
-    def read_sql(self, sql: str) -> SQLResponse:
+    Parameters
+    ----------
+    format : str, default="jdbc"
+        String for format of the data source. Default to 'jdbc'.
 
-        spark: SparkSession = SparkSession.builder.getOrCreate()
-        db_engine = self.connection.get_db_engine()
+     schema : :class:`pyspark.sql.types.StructType` or str, default=None
+        Optional :class:`pyspark.sql.types.StructType` for the input schema
+        or a DDL-formatted string (For example ``col0 INT, col1 DOUBLE``).
+
+    options : dict, default=None
+        All other string options.
+    """
+
+    def __init__(
+        self,
+        format: str = "jdbc",
+        schema: StructType | str | None = None,
+        options: dict[str, str] = None,
+    ):
+        self.format = format
+        self.schema = schema
+        self.options = options or {}
+
+    def read_sql(self, sql_params: SQLParams) -> SQLResponse:
+
+        spark = SparkSession.builder.getOrCreate()
 
         options = {
-            "url": self.connection.url(),
+            "url": sql_params.url.as_string(template=jdbcTemplate),
             "tempdir": settings.tempdir,
-            "query": sql,
-            **db_engine.spark_options,
+            "query": sql_params.query,
+            **self.options,
         }
 
-        format_ = db_engine.spark_format
-        reader: DataFrameReader = spark.read.format(format_).options(**options)
-        return SQLResponse(dataframe=reader.load())
+        dataframe: DataFrame = spark.read.load(
+            format=self.format,
+            schema=self.schema,
+            options=options,
+        )
+
+        return SQLResponse(dataframe=dataframe)

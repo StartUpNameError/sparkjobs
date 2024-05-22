@@ -14,6 +14,12 @@ class SQLResponse:
     dataframe: DataFrame
 
 
+@dataclass(kw_only=True)
+class SQLParams:
+    url: URL
+    query: str
+
+
 class SQLEngine(abc.ABC):
     """Base class to inherit for concrete SQLEngine's.
 
@@ -29,9 +35,6 @@ class SQLEngine(abc.ABC):
         Represents the components of a URL used to connect to a database.
     """
 
-    def __init__(self, url: URL):
-        self.url = url
-
     @abc.abstractmethod
-    def read_sql(self, sql: str) -> SQLResponse:
+    def read_sql(self, sql_params: SQLParams) -> SQLResponse:
         pass
