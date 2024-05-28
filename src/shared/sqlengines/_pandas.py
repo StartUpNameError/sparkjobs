@@ -1,14 +1,25 @@
 import pandas as pd
 from sqlalchemy.engine import create_engine
 
-from shared.sqlengine import SQLEngine, SQLParams, SQLResponse
+from shared.sqlengine import SQLEngine
 
 
 class PandasSQLEngine(SQLEngine):
-    """Wrapper around `pd.read_sql`."""
+    """Read SQL query or database table into a pandas DataFrame.
 
-    def read_sql(self, sql_params: SQLParams) -> SQLResponse:
+    This function is a convenience wrapper around `pd.read_sql`.
 
-        con = create_engine(url=sql_params.url.as_string())
-        dataframe = pd.read_sql(sql=sql_params.query, con=con)
-        return SQLResponse(dataframe=dataframe)
+
+    Parameters
+    ----------
+    url : str
+        String connection url.
+    """
+
+    def __init__(self, url: str) -> None:
+        self.url = url
+        super().__init__()
+
+    def read_sql(self, sql) -> pd.DataFrame:
+        con = create_engine(url=self.url)
+        return pd.read_sql(sql=sql, con=con)

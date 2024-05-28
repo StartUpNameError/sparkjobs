@@ -1,8 +1,7 @@
 import abc
-from typing import Any, Literal, Protocol
+from typing import Any, Callable, Protocol
 
-from shared.sqlengine import SQLEngine, SQLParams, SQLResponse
-from shared.sqlengines import get_sql_engine
+from shared.sqlengine import SQLEngine
 from shared.url import URL
 
 
@@ -24,40 +23,53 @@ class Query(abc.ABC):
 
     . note::
         This class should not be used directly. Use derived classes instead.
-
-    Parameters
-    ----------
-    url_factory : URLFactory
-        No args :class:`URL` factory.
     """
-
-    def __init__(self, url_factory: URLFactory):
-        self.url_factory = url_factory
 
     def execute(
         self,
-        engine: Literal["spark", "pandas", "glue"] | SQLEngine = "spark",
-        engine_config: dict[str, Any] | None = None,
-    ) -> SQLResponse:
+        engine: SQLEngine,
+        **options,
+    ) -> Any:
         """Executes query through specified engine.
 
         Parameters
         ----------
-        engine : str or SQLEngine
+        engine : SQLEngine
             Engine for executing the query.
 
-        engine_config : dict or None
-            Engine configuration.
+        **options : dict
+            SQLEngine specific options.
         """
-
-        url = self.url_factory()
-        query = self.create_sql()
-        sql_engine = get_sql_engine(name=engine, initargs=engine_config)
-
-        sql_params = SQLParams(url=url, query=query)
-        return sql_engine.read_sql(sql_params=sql_params)
+        sql = self.create_sql()
+        return engine.load(sql, **options)
 
     @abc.abstractmethod
     def create_sql(self) -> str:
         """Returns sql query to be executed."""
         pass
+
+
+class FunctionQuery(Query):
+    """Constructs a query executor from an arbitrary callable.
+
+    Parameters
+    ----------
+    func: callable
+        The callable to use to create the sql string. This will be called with
+        ``kw_args`` forwarded.
+
+    kw_args : dict, default=None
+        Dictionary of keyword arguments to pass to func.
+    """
+
+    def __init__(
+        self,
+        *,
+        func: Callable[..., str],
+        kw_args: dict | None = None,
+    ) -> None:
+        self.func = func
+        self.kw_args = kw_args or {}
+
+    def create_sql(self) -> str:
+        return self.func(**self.kw_args)
