@@ -2,7 +2,7 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import StructType
 
 from shared.settings import conf
-from shared.sqlengine import SQLEngine, SQLParams, SQLResponse
+from shared.sqlengine import SQLEngine
 from shared.url import URL
 
 settings = conf.get_spark_settings()
@@ -50,6 +50,7 @@ class SparkSQLEngine(SQLEngine):
             "query": sql,
             "url": self.url,
             **self.spark_options,
+            **self._options,
         }
 
         dataframe: DataFrame = spark.read.load(
