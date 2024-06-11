@@ -37,7 +37,7 @@ The option ``-t`` allows us to specify a target directory for the installation.
 
 
 Now we can import our 3rd party dependencies withing our jobs and run it on 
-PySpark using:
+PySpark using
 
 ```
 spark-submit --py-files jobs.zip,libs.zip main.py --job <your_job>
