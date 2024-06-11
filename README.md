@@ -5,7 +5,7 @@ scripts.
 
 # Running a PySpark Job
 
-Every job module must be located inside ``src/jobs`` a can be run via
+Every job module must be located inside ``src/jobs`` and can be run via
 
 ```
 make build
@@ -14,7 +14,7 @@ spark-submit --py-files jobs.zip main.py --job wordcount
 ```
 
 That is, all files and dependencies are first packaged into a single ZIP file
-so spark can import them within the job. Subsecuent runs do not need to rerun 
+so Spark can import them within the job. Subsecuent runs do not need to rerun 
 the ``make`` command (except when the job has been modified).
 
 
