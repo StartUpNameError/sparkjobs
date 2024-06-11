@@ -4,3 +4,4 @@ click
 sparkml_base_classes
 psycopg2
 python-dotenv
+pydantic_settings
