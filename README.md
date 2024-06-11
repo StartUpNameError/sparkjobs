@@ -24,17 +24,24 @@ perfectly fine. Give it a try!
 
 # Third-party dependencies
 
-This repo already comes with collection of common third-party dependencies 
-located inside ``src/libs`` that can be shipped on every ``spark-submit`` call
-by using the same ZIP packaging technique.
+This repo already comes with a minimal collection of common third-party dependencies 
+defined in the ``requirements.txt`` file and installed inside ``src/libs``.
+These can be shipped on every ``spark-submit`` call by using the same ZIP packaging technique.
 
 You can include more by pip installing them into this folder via
 
 ```
-pip install -r requirements.txt -t ./src/libs
+pip install -r extra_requirements.txt -t ./src/libs
 ```
 The option ``-t`` allows us to specify a target directory for the installation.
 
+
+Now we can import our 3rd party dependencies withing our jobs and run it on 
+PySpark using:
+
+```
+spark-submit --py-files jobs.zip,libs.zip main.py --job <your_job>
+```
 
 
 
