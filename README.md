@@ -24,9 +24,7 @@ perfectly fine. Give it a try!
 
 # Third-party dependencies
 
-This repo already comes with a minimal collection of common third-party dependencies 
-defined in the ``requirements.txt`` file and installed inside ``src/libs``.
-These can be shipped on every ``spark-submit`` call by using the same ZIP packaging technique.
+This repo already comes with a minimal collection of common third-party dependencies defined in the ``requirements.txt`` and are required to use the shared library. These are installed inside ``src/libs`` and can be shipped on every ``spark-submit`` call by using the same ZIP packaging technique.
 
 You can include more by pip installing them into this folder via
 
@@ -36,8 +34,8 @@ pip install -r extra_requirements.txt -t ./src/libs
 The option ``-t`` allows us to specify a target directory for the installation.
 
 
-Now we can import our 3rd party dependencies withing our jobs and run it on 
-PySpark using
+Now we can import all our 3rd party dependencies within our jobs 
+(e.g., ``import pandas as pd``) by running Spark using
 
 ```
 spark-submit --py-files jobs.zip,libs.zip main.py --job <your_job>
