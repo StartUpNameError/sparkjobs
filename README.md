@@ -17,6 +17,9 @@ That is, all files and dependencies are first packaged into a single ZIP file
 so Spark can import them within the job. Subsecuent runs do not need to rerun 
 the ``make`` command (except when the job has been modified).
 
+The ``wordcount`` job is included in this repo, so the above command should work
+perfectly fine. Give it a try!
+
 
 # Writing a PySpark Job
 ...
