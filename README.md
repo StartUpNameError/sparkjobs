@@ -35,7 +35,8 @@ pip install -r extra_requirements.txt -t ./src/libs
 The option ``-t`` allows us to specify a target directory for the installation.
 
 Now we can import all our 3rd party dependencies within our jobs 
-(e.g., ``import pandas as pd``) by specifying the ``libs.zip`` file in the spark-submit command. That is,
+(e.g., ``import pandas as pd``) by specifying the ``libs.zip`` file in the 
+spark-submit command. That is,
 
 ```
 spark-submit --py-files jobs.zip,libs.zip main.py --job <your_job>
