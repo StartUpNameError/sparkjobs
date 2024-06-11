@@ -24,7 +24,8 @@ perfectly fine. Give it a try!
 
 # Third-party dependencies
 
-This repo already comes with a minimal collection of common third-party dependencies defined in the ``requirements.txt`` and are required to use the shared library. These are installed inside ``src/libs`` and can be shipped on every ``spark-submit`` call by using the same ZIP packaging technique.
+This repo already comes with a minimal collection of common third-party dependencies defined in the ``requirements.txt`` which are required to use the shared library
+(``src/shared``). These are installed inside ``src/libs`` and can be shipped on every ``spark-submit`` call by using the same ZIP packaging technique.
 
 You can include more by pip installing them into this folder via
 
