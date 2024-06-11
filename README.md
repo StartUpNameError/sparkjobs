@@ -42,6 +42,7 @@ PySpark using
 ```
 spark-submit --py-files jobs.zip,libs.zip main.py --job <your_job>
 ```
+(don't forget to ``make build`` as neccesary).
 
 
 
