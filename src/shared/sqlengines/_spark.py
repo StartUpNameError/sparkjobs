@@ -7,7 +7,7 @@ from shared.url import URL
 
 settings = conf.get_spark_settings()
 
-JDBC_TEMPALTE: str = "{drivername}://{host}:{port}/{database}?user={username}&password={password}"
+JDBC_TEMPLATE: str = "{drivername}://{host}:{port}/{database}?user={username}&password={password}"
 
 
 class SparkSQLEngine(SQLEngine):
@@ -45,10 +45,12 @@ class SparkSQLEngine(SQLEngine):
         options = {
             "tempdir": settings.tempdir,
             "query": sql,
-            "url": url.as_string(template=JDBC_TEMPALTE),
+            "url": url.as_string(template=JDBC_TEMPLATE),
             **self.spark_options,
             **self._options,
         }
+
+        print(f'SparkSQLEngine options: {options}')
 
         dataframe: DataFrame = spark.read.load(
             format=self.format,
