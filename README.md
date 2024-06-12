@@ -19,7 +19,10 @@ the ``make`` command (except when the job has been modified or extra
 dependencies have been added).
 
 The ``wordcount`` job is included in this repo, so the above command should work
-perfectly fine. Give it a try!
+perfectly fine without extra dependencies. Give it a try!
+
+
+# ``make build``
 
 
 # Third-party dependencies
