@@ -13,10 +13,9 @@ cd dist
 spark-submit --py-files jobs.zip main.py --job wordcount
 ```
 
-That is, all files and dependencies are first packaged into a single ZIP file
-so Spark can import them within the job. Subsecuent runs do not need to rerun 
-the ``make`` command (except when the job has been modified or extra 
-dependencies have been added).
+This process packages all dependencies into ZIP files, making them available 
+inside the jobs. Subsequent runs do not need to rerun the make command, unless
+the job has been modified or extra dependencies have been added.
 
 The ``wordcount`` job is included in this repo, so the above command should work
 perfectly fine without extra dependencies. Give it a try!
