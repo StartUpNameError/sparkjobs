@@ -24,24 +24,24 @@ perfectly fine. Give it a try!
 
 # Third-party dependencies
 
-This repo already comes with a minimal collection of common third-party dependencies defined in the ``requirements.txt`` which are required to use the shared library
-(``src/shared``). These are installed inside ``src/libs`` and can be shipped on every ``spark-submit`` call by using the same ZIP packaging technique.
+This repository includes a minimal set of common third-party dependencies listed in the ``requirements.txt`` file, necessary for using the shared library located in ``src/shared``. These are installed in ``src/libs`` and can be included with each 
+spark-submit call using the same ZIP packaging technique.
 
-You can include more by pip installing them into this folder via
+To include extra dependencies, you can install them into this folder by running:
 
 ```
 pip install -r extra_requirements.txt -t ./src/libs
 ```
-The option ``-t`` allows us to specify a target directory for the installation.
 
-Now we can import all our 3rd party dependencies within our jobs 
-(e.g., ``import pandas as pd``) by specifying the ``libs.zip`` file in the 
-spark-submit command. That is,
+The ``-t`` option allows you to specify a target directory for the installation.
+
+Now, you can import these dependencies within your jobs (e.g., ``import pandas as pd``) by specifying the libs.zip file in the spark-submit command:
 
 ```
 spark-submit --py-files jobs.zip,libs.zip main.py --job <your_job>
 ```
-(don't forget to ``make build`` as neccesary).
+
+Don't forget to run ``make build`` as necessary.
 
 
 
