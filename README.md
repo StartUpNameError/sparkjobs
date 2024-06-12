@@ -24,8 +24,8 @@ perfectly fine. Give it a try!
 
 # Third-party dependencies
 
-This repository includes a minimal set of common third-party dependencies listed in the ``requirements.txt`` file, necessary for using the shared library located in ``src/shared``. These are installed in ``src/libs`` and can be included with each 
-spark-submit call using the same ZIP packaging technique.
+This repository includes a minimal set of common third-party dependencies listed in the ``requirements.txt`` file, necessary for using the shared library located in ``src/shared``. These are installed in ``src/libs`` and can be included on each 
+Spark job using the same ZIP packaging technique.
 
 To include extra dependencies, you can install them into this folder by running:
 
