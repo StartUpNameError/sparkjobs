@@ -50,12 +50,10 @@ class SparkSQLEngine(SQLEngine):
             **self._options,
         }
 
-        print(f'SparkSQLEngine options: {options}')
-
         dataframe: DataFrame = spark.read.load(
             format=self.format,
             schema=self.schema,
-            options=options,
+            **options,
         )
 
         return dataframe
