@@ -6,6 +6,8 @@ from typing import Any, Type
 from pandas import DataFrame as PandasDataFrame
 from pyspark.sql import DataFrame as SparkDataFrame
 
+from shared.url import URL
+
 DataFrame = PandasDataFrame | SparkDataFrame
 
 
@@ -54,28 +56,16 @@ class SQLEngine(abc.ABC):
     Concrete/derived SQLEngine classes must implement abstract method
     :meth:`read_sql`.
 
+    The arguments accepted by __init__ should all be keyword arguments with a 
+    default value. In other words, a user should be able to instantiate a 
+    SQLEngine without passing any arguments to it. 
+
      . note::
         This class should not be used directly. Use derived classes instead.
-
-    Parameters
-    ----------
-    url : URL
-        Represents the components of a URL used to connect to a database.
     """
 
     def __init__(self) -> None:
         self._options = AttributeHolder(exc=MissingOption)
-
-    def load(self, sql: str, **options) -> Any:
-        """Executes SQL query.
-
-        Parameters
-        ----------
-        sql: str
-            SQL query to be executed
-        """
-        self.options(**options)
-        return self.read_sql(sql)
 
     def options(self, **options) -> SQLEngine:
         for key, val in options.items():
@@ -88,5 +78,15 @@ class SQLEngine(abc.ABC):
         return self
 
     @abc.abstractmethod
-    def read_sql(self, sql: str) -> DataFrame:
+    def read_sql(self, sql: str, url: URL) -> DataFrame:
+        """Executes SQL query.
+
+        Parameters
+        ----------
+        sql: str
+            SQL query to be executed
+
+        url: shared.url.URL
+            Holds the components of a URL used to connect to a database.
+        """
         pass

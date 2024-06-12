@@ -17,8 +17,7 @@ This process packages all dependencies into ZIP files, making them available
 inside the jobs. Subsequent runs do not need to rerun the make command, unless
 the job has been modified or extra dependencies have been added.
 
-The ``wordcount`` job is included in this repo, so the above command should work
-perfectly fine without extra dependencies. Give it a try!
+The ``wordcount`` job is included in this repo, so the above command should work perfectly fine. Give it a try!
 
 
 # What does ``make build`` do?

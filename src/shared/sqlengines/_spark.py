@@ -7,6 +7,8 @@ from shared.url import URL
 
 settings = conf.get_spark_settings()
 
+JDBC_TEMPALTE: str = ""
+
 
 class SparkSQLEngine(SQLEngine):
     """Lets you query structured data inside Spark programs.
@@ -29,26 +31,24 @@ class SparkSQLEngine(SQLEngine):
 
     def __init__(
         self,
-        url: str,
         format: str = "jdbc",
         schema: StructType | str | None = None,
         spark_options: dict[str, str] = None,
     ):
-        self.url = url
         self.format = format
         self.schema = schema
         self.spark_options = spark_options or {}
 
         super().__init__()
 
-    def read_sql(self, sql: str) -> DataFrame:
+    def read_sql(self, sql: str, url: URL) -> DataFrame:
 
         spark = SparkSession.builder.getOrCreate()
 
         options = {
             "tempdir": settings.tempdir,
             "query": sql,
-            "url": self.url,
+            "url": url.as_string(template=JDBC_TEMPLATE),
             **self.spark_options,
             **self._options,
         }
