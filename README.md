@@ -22,7 +22,9 @@ The ``wordcount`` job is included in this repo, so the above command should work
 perfectly fine without extra dependencies. Give it a try!
 
 
-# ``make build``
+# What does ``make build`` do?
+...
+
 
 
 # Third-party dependencies
