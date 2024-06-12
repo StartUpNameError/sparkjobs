@@ -53,10 +53,5 @@ Don't forget to run ``make build`` as necessary.
 # Writing a PySpark Job
 ...
 
-# Writing Transformations
-...
-
-# Unit Testing
-...
 
 
