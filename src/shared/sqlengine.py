@@ -56,9 +56,9 @@ class SQLEngine(abc.ABC):
     Concrete/derived SQLEngine classes must implement abstract method
     :meth:`read_sql`.
 
-    The arguments accepted by __init__ should all be keyword arguments with a 
-    default value. In other words, a user should be able to instantiate a 
-    SQLEngine without passing any arguments to it. 
+    The arguments accepted by __init__ should all be keyword arguments with a
+    default value. In other words, a user should be able to instantiate a
+    SQLEngine without passing any arguments to it.
 
      . note::
         This class should not be used directly. Use derived classes instead.
@@ -66,12 +66,6 @@ class SQLEngine(abc.ABC):
 
     def __init__(self) -> None:
         self._options = AttributeHolder(exc=MissingOption)
-
-    def options(self, **options) -> SQLEngine:
-        for key, val in options.items():
-            self.option(key, to_str(val))
-
-        return self
 
     def option(self, key: str, value: Any) -> SQLEngine:
         self._options[key] = value

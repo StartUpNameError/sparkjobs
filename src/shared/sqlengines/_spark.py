@@ -7,7 +7,7 @@ from shared.url import URL
 
 settings = conf.get_spark_settings()
 
-JDBC_TEMPLATE: str = "{drivername}://{host}:{port}/{database}?user={username}&password={password}"
+JDBC_TEMPLATE: str = "jdbc:{drivername}://{host}:{port}/{database}"
 
 
 class SparkSQLEngine(SQLEngine):
@@ -22,19 +22,19 @@ class SparkSQLEngine(SQLEngine):
         Optional :class:`pyspark.sql.types.StructType` for the input schema
         or a DDL-formatted string (For example ``col0 INT, col1 DOUBLE``).
 
-    spark_options : dict, default=None
-        All other spark options.
+    options : key-word args
+        Spark options.
     """
 
     def __init__(
         self,
         format: str = "jdbc",
         schema: StructType | str | None = None,
-        spark_options: dict[str, str] = None,
+        **options
     ):
         self.format = format
         self.schema = schema
-        self.spark_options = spark_options or {}
+        self.options = options
 
         super().__init__()
 
@@ -43,13 +43,13 @@ class SparkSQLEngine(SQLEngine):
         spark = SparkSession.builder.getOrCreate()
 
         options = {
-            "tempdir": settings.tempdir,
             "query": sql,
             "url": url.as_string(template=JDBC_TEMPLATE),
-            **self.spark_options,
-            **self._options,
+            "user": url.username,
+            "password": url.password
         }
 
+        options.update(self.options)
         dataframe: DataFrame = spark.read.load(
             format=self.format,
             schema=self.schema,
