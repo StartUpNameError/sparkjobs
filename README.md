@@ -1,6 +1,6 @@
 This repo aims to provide a systematic and structured flow of data
 processing by providing a single entrypoint (``main.py``) for all the stored 
-scripts.
+jobs.
 
 
 # Running a PySpark Job
@@ -10,12 +10,8 @@ Every job module must be located inside ``src/jobs`` and can be run via
 ```
 make build
 cd dist 
-spark-submit --py-files jobs.zip main.py --job wordcount
+spark-submit --py-files jobs.zip main.py --job <jobName>
 ```
-
-This process packages all dependencies into ZIP files, making them available 
-inside the jobs. Subsequent runs do not need to rerun the make command, unless
-the job has been modified or extra dependencies have been added.
 
 The ``wordcount`` job is included in this repo, so the above command should work perfectly fine. Give it a try!
 
@@ -49,7 +45,21 @@ Don't forget to run ``make build`` as necessary.
 
 
 # Writing a PySpark Job
-...
+PySpark jobs must be python modules exposing the 
+``run(spark: SparkSession, **kwargs)`` function.
+The ``main.py`` module will then try to import thiis function under the 
+specified job module using the ``importlib`` library. This logic is depicted 
+in the following code snippet.
+
+```python
+import importlib
+
+jobArgs = {...} 
+jobName = "my-job"
+jobModule = importlib.import_module(f"jobs.{jobName}")
+jobModule.run(spark=spark, **jobArgs)
+```
+
 
 
 
