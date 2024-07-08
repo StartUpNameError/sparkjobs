@@ -16,12 +16,18 @@ class CyclicalEncoder(TransformerBaseClass):
 
     Parameters
     ----------
+    col : str or Column
+        A name of the column, or the Column to encode.
+
     period : int, default=10
         Input data period.
+
+    drop : bool, default=False
+        If True, drops original column.
     """
 
     @keyword_only
-    def __init__(self, col: str = None, period: int = 1, drop: bool = True):
+    def __init__(self, col: str = None, period: int = 1, drop: bool = False):
         super().__init__()
 
     def _transform(self, ddf):
@@ -36,7 +42,7 @@ class CyclicalEncoder(TransformerBaseClass):
             col=self._col,
             newcol=self._col + "_cosine",
             fn=lambda col: F.cos(col / self._period * 2 * math.pi),
-            drop=True,
+            drop=self._drop,
         )
 
         stages = [sine_transform, cosine_transform]

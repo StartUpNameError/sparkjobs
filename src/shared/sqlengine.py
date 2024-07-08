@@ -3,12 +3,8 @@ from __future__ import annotations
 import abc
 from typing import Any, Type
 
-from pandas import DataFrame as PandasDataFrame
-from pyspark.sql import DataFrame as SparkDataFrame
-
+from shared.typing import DataFrame
 from shared.url import URL
-
-DataFrame = PandasDataFrame | SparkDataFrame
 
 
 class MissingOption(KeyError):

@@ -46,7 +46,7 @@ class SparkSQLEngine(SQLEngine):
             "query": sql,
             "url": url.as_string(template=JDBC_TEMPLATE),
             "user": url.username,
-            "password": url.password
+            "password": url.password,
         }
 
         options.update(self.options)
@@ -57,3 +57,22 @@ class SparkSQLEngine(SQLEngine):
         )
 
         return dataframe
+
+
+class SparkRedshiftEngine(SparkSQLEngine):
+    """Concrete SparkSQLEngine for AWS Redshift
+
+    Parameters
+    ----------
+    options : key-word args
+        Spark options.
+    """
+
+    def __init__(**options):
+
+        super().__init__(
+            format="io.github.spark_redshift_community.spark.redshift",
+            tempdir=settings.tempdir,
+            forward_spark_s3_credentials="true",
+            **options,
+        )

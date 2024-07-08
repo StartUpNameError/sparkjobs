@@ -1,9 +1,36 @@
 import pyspark.sql.functions as F
 from pyspark import keyword_only
-from pyspark.ml import Pipeline
+from pyspark.sql import DataFrame
 from sparkml_base_classes import TransformerBaseClass
 
-from ._column import ColumnTransformer
+from shared.typing import ColumnOrName, DatetimeAttribute, SQLFunction
+
+from ._column import MultiColumnTransformer
+
+
+def _get_datetime_func(name: DatetimeAttribute) -> SQLFunction:
+    """Returns datetime function from module pyspark.sql.function.
+
+    These functions extract datetime attributes from a given date/timestamp.
+
+    Parameters
+    ----------
+    name : DatetimeAttribute
+        Name of the datetime attr. Example: "dayofweek".
+    """
+
+    name_to_fn: dict[str, SQLFunction] = {
+        "dayofweek": F.dayofweek,
+        "month": F.month,
+    }
+
+    if name not in name_to_fn:
+        raise ValueError(
+            f"Date attribute '{name}' is not valid. "
+            f"Available options are: {list(name_to_fn)}."
+        )
+
+    return name_to_fn[name]
 
 
 class DateNormalizer(TransformerBaseClass):
@@ -31,27 +58,32 @@ class DateNormalizer(TransformerBaseClass):
         return ddf.withColumn(self._col, date_col)
 
 
-class DateSplitter(TransformerBaseClass):
+class DatetimeExtractor(TransformerBaseClass):
+    """Extracts datetime attributes (e.g. "dayofweek") from date column.
+
+    Parameters
+    ----------
+    date_col : str or Column
+        Date column.
+
+    attrs : tuple of DatetimeAttribute.
+        Datetime attributes to extract.
+    """
 
     @keyword_only
     def __init__(
-        self, datecol: str = "date", dateattrs: tuple = ("dayofweek", "month")
+        self,
+        date_col: ColumnOrName = None,
+        attrs: tuple[DatetimeAttribute] = None,
     ):
         super().__init__()
 
-    def _transform(self, ddf):
+    def _transform(self, X: DataFrame) -> DataFrame:
 
-        fns = {"dayofweek": F.dayofweek, "month": F.month}
-
-        for attr in self._dateattrs:
-            if attr not in fns:
-                raise ValueError(
-                    f"Date attribute '{attr}' is not valid. "
-                    f"Availables are {list(fns)}."
-                )
-
-        stages = [
-            ColumnTransformer(col=self._datecol, newcol=attr, fn=fns[attr])
-            for attr in self._dateattrs
+        fns: list[SQLFunction] = [
+            _get_datetime_func(attr) for attr in self._attrs
         ]
-        return Pipeline(stages=stages).fit(ddf).transform(ddf)
+
+        return MultiColumnTransformer(
+            col=self._date_col, fns=fns, new_cols=self._attrs
+        ).transform(X)

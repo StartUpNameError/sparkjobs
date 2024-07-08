@@ -1,0 +1,49 @@
+from typing import Any, Callable
+
+
+def arg_callback(
+    arg: str, func: Callable[[Any], Any], func_kw_args: dict | None = None
+) -> Callable:
+    """Makes decorator that preprocesses function argument ``arg`` using
+    the specified callback function ``func``.
+
+    Parameters
+    ----------
+    args : str
+        Arg name.
+
+    func : Callable
+        Callback function.
+
+    Example
+    -------
+    @preprocess_arg(arg="a", func=lambda x: x + 1)
+    def foo(a: int) -> int:
+        return a
+
+    >>> foo(a=2)  # Returns 3
+    """
+    if func_kw_args is None:
+        func_kw_args = {}
+
+    def decorator(fn: Callable):
+        """Preprocesses function argument using the specified preprocessing
+        function.
+        """
+
+        def inner(*args, **kwargs):
+
+            if arg not in kwargs:
+                raise ValueError(
+                    f"Cannot apply preprocessor since argument `{arg}` "
+                    "was not given."
+                )
+
+            # Apply preprocessor prior to calling ``fn``.
+            kwargs[arg] = func(kwargs[arg], **func_kw_args)
+
+            return fn(*args, **kwargs)
+
+        return inner
+
+    return decorator

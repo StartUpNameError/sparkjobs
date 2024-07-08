@@ -1,23 +1,23 @@
 import importlib
-import os
-import sys
 import time
 
 import click
 from pyspark.sql import SparkSession
 
-if os.path.exists("libs.zip"):
-    sys.path.insert(0, "libs.zip")
-else:
-    sys.path.insert(0, "./libs")
-
-if os.path.exists("jobs.zip"):
-    sys.path.insert(0, "jobs.zip")
-else:
-    sys.path.insert(0, "./jobs")
-
 
 def args_to_dict(arguments: list[str]) -> dict[str, str]:
+    """Converts user args to a dictionary.
+
+    Parameters
+    ----------
+    arguments : list of str
+        User arguments.
+
+    Returns
+    -------
+    dict : dict, str -> str
+        User args parsed into a dictionary of key:value pairs.
+    """
     user_dict: dict[str, str] = {}
 
     for arg in arguments:
@@ -39,32 +39,27 @@ def args_to_dict(arguments: list[str]) -> dict[str, str]:
 @click.command()
 @click.option(
     "--job",
+    "-J",
     required=True,
     type=str,
     help="The name of the job module you want to run.",
 )
 @click.option(
-    "--job-args",
+    "--args-list",
     "-A",
+    metavar="NAME=VALUE",
     multiple=True,
-    help="An argument for the job of the form -A name=value.",
+    help="An argument for the run, of the form -A name=value.",
 )
-def main(job, job_args):
+def main(job, args_list):
     """Runs a PySpark job."""
 
-    args_dict = args_to_dict(job_args)
-    args_str = " ".join(job_args) if job_args else ""
-
-    spark = (
-        SparkSession.builder.appName(job)
-        .config("spark.executorEnv.PYSPARK_JOB_ARGS", args_str)
-        .getOrCreate()
-    )
-
+    args_dict = args_to_dict(args_list)
+    spark = SparkSession.builder.appName(job).getOrCreate()
     job_module = importlib.import_module(f"jobs.{job}")
 
     start = time.time()
-    job_module.run(spark, **args_dict)
+    job_module.run(spark=spark, **args_dict)
     end = time.time()
 
     print(f"Execution of job {job} took {end - start} seconds.")

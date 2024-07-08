@@ -1,6 +1,6 @@
-from typing import Callable
-
 from pyspark.sql import DataFrame
+
+from shared.typing import OnFunction
 
 
 def intersection(x: DataFrame, y: DataFrame) -> list[str]:
@@ -22,7 +22,7 @@ def intersection(x: DataFrame, y: DataFrame) -> list[str]:
     return list(set(x.columns).intersection(y.columns))
 
 
-class DataFrameJoin:
+class DataFrameMerger:
     """Wraps DataFrame.join operation.
 
     Parameters
@@ -39,21 +39,20 @@ class DataFrameJoin:
 
     def __init__(
         self,
-        on: Callable[[DataFrame, DataFrame], list[str]] | list[str],
+        on: OnFunction | list[str] | str = intersection,
         how: str = "inner",
     ) -> None:
         self.on = on
         self.how = how
 
-    def __call__(self, left: DataFrame, right: DataFrame) -> Any:
+    def merge(self, left: DataFrame, right: DataFrame) -> DataFrame:
         """Joins left and right dataframes.
 
         left : DataFrame
             Left dataframe.
 
         right : DataFrame
-            Right dataframe
-
+            Right dataframe.
         """
         on = self.on(left, right) if callable(self.on) else self.on
-        return left.join(right, on=on, how=self.how)
+        return left.join(other=right, on=on, how=self.how)
