@@ -17,7 +17,7 @@ def arg_callback(
 
     Example
     -------
-    @preprocess_arg(arg="a", func=lambda x: x + 1)
+    @arg_callback(arg="a", func=lambda x: x + 1)
     def foo(a: int) -> int:
         return a
 
