@@ -54,7 +54,7 @@ in the following code snippet.
 ```python
 import importlib
 
-jobArgs = {...} 
+jobArgs = {"arg1": "value", "arg2": "value"} 
 jobName = "my-job"
 jobModule = importlib.import_module(f"jobs.{jobName}")
 jobModule.run(spark=spark, **jobArgs)
