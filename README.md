@@ -59,7 +59,7 @@ PySpark jobs must be python modules exposing the
 ``run(spark: SparkSession, **kwargs)`` function.
 The ``main.py`` module will then try to import this function under the 
 specified job module using the ``importlib`` library. This logic is depicted 
-in the following code snippet,
+in the following code,
 
 ```python
 import importlib
