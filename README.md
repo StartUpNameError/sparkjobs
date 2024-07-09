@@ -13,8 +13,6 @@ cd dist
 spark-submit --py-files jobs.zip main.py --job <jobName>
 ```
 
-The ``wordcount`` job is included in this repo, so the above command should work perfectly fine. Give it a try!
-
 
 # What does ``make build`` do?
 ...
@@ -22,32 +20,42 @@ The ``wordcount`` job is included in this repo, so the above command should work
 
 
 # Third-party dependencies
+PySpark provides multiple ways to manage package Python dependencies making
+them avaiable inside jobs. Plese visit the Python [Package Management](https://spark.apache.org/docs/latest/api/python/user_guide/python_packaging.html) 
+site.
 
-This repository includes a minimal set of common third-party dependencies listed in the ``requirements.txt`` file, necessary for using the shared library located in ``src/shared``. These are installed in ``src/libs`` and can be included on each 
-Spark job using the same ZIP packaging technique.
+I find the **Virtualenv** approach the most straight forward. Say you have
+a virtualenv ``my-env`` created with ``python3 -m venv my-env``. 
+You can package and save it to hdfs with
 
-To include extra dependencies, you can install them into this folder by running:
-
-```
-pip install -r extra_requirements.txt -t ./src/libs
-```
-
-The ``-t`` option allows you to specify a target directory for the installation.
-
-Now, you can import these dependencies within your jobs (e.g., ``import pandas as pd``) by specifying the libs.zip file in the spark-submit command:
-
-```
-spark-submit --py-files jobs.zip,libs.zip main.py --job <your_job>
+```bash
+venv-pack -o my-env.tar.gz
+hdfs dfs -put -f my-env.tar.gz <destination>
 ```
 
-Don't forget to run ``make build`` as necessary.
+where ``<destination>`` can be, for example, ``/shared/python-envs``.
+Then, use the ``--archives`` option in the ``spark-submit`` to submit your virtual 
+environment,
+
+```bash
+spark-submit \
+--conf spark.yarn.appMasterEnv.PYSPARK_PYTHON=./environment/bin/python \
+--archives spark.yarn.dist.archives=hdfs:///shared/python-envs/my-env.tar.gz#environment \
+--master yarn \
+--deploy-mode cluster \
+main.py
+```
+
+
+> [!NOTE]  
+> `--conf spark.yarn.dist.archives` can be used instead of `--archives`.
 
 
 
 # Writing a PySpark Job
 PySpark jobs must be python modules exposing the 
 ``run(spark: SparkSession, **kwargs)`` function.
-The ``main.py`` module will then try to import thiis function under the 
+The ``main.py`` module will then try to import this function under the 
 specified job module using the ``importlib`` library. This logic is depicted 
 in the following code snippet,
 
