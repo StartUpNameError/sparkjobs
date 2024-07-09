@@ -21,11 +21,11 @@ spark-submit --py-files jobs.zip main.py --job <jobName>
 
 # Third-party dependencies
 PySpark provides multiple ways to manage package Python dependencies making
-them avaiable inside jobs. Plese visit the Python [Package Management](https://spark.apache.org/docs/latest/api/python/user_guide/python_packaging.html) 
+them avaiable inside jobs. Please visit the Python [Package Management](https://spark.apache.org/docs/latest/api/python/user_guide/python_packaging.html) 
 site.
 
-I find the **Virtualenv** approach the most straight forward. Say you have
-a virtualenv ``my-env`` created with ``python3 -m venv my-env``. 
+However, I find the **Virtualenv** approach the most straight forward. 
+Say you have a virtualenv ``my-env`` created with ``python3 -m venv my-env``. 
 You can package and save it to hdfs with
 
 ```bash
@@ -33,9 +33,9 @@ venv-pack -o my-env.tar.gz
 hdfs dfs -put -f my-env.tar.gz <destination>
 ```
 
-where ``<destination>`` can be, for example, ``/shared/python-envs``.
-Then, use the ``--archives`` option in the ``spark-submit`` to submit your virtual 
-environment,
+where `<destination>` can be, for example, `/shared/python-envs`.
+Then, use the `--archives` option in the `spark-submit` to make your virtual 
+environment avaibale within your jobs,
 
 ```bash
 spark-submit \
@@ -43,7 +43,7 @@ spark-submit \
 --archives spark.yarn.dist.archives=hdfs:///shared/python-envs/my-env.tar.gz#environment \
 --master yarn \
 --deploy-mode cluster \
-main.py
+main.py --job <jobName>
 ```
 
 
