@@ -29,6 +29,7 @@ Say you have a virtualenv ``my-env`` created with ``python3 -m venv my-env``.
 You can package and save it to hdfs with
 
 ```bash
+source my-env/bin/activate
 venv-pack -o my-env.tar.gz
 hdfs dfs -put -f my-env.tar.gz <destination>
 ```
