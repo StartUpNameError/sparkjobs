@@ -30,6 +30,7 @@ You can package and save it to hdfs with
 
 ```bash
 source my-env/bin/activate
+pip3 install venv-pack
 venv-pack -o my-env.tar.gz
 hdfs dfs -put -f my-env.tar.gz <destination>
 ```
