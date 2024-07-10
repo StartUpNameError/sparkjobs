@@ -30,31 +30,36 @@ the Maven Central repository:
 ```
 cd $SPARK_HOME/jars
 wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-s3/1.12.741/aws-java-sdk-s3-1.12.741.jar
+wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-dynamodb/1.12.741/aws-java-sdk-dynamodb-1.12.741.jar
 ```
 
 
 ### 2. Use the RedshiftData Source for Apache Spark - Community Edition
     
 
-* **2.1** Init Spark with the ``spark.jars.packages`` configuration set to
+* **2.1** Init Spark with the ``packages`` option set to
 ``com.amazon.redshift:redshift-jdbc42:2.1.0.24,org.apache.spark:spark-avro_2.12:3.5.0,io.github.spark-redshift-community:spark-redshift_2.12:6.2.0-spark_3.5``.
 
-```python
-spark = (
-    SparkSession
-    .builder
-    .config('spark.jars.packages', 'com.amazon.redshift:redshift-jdbc42:2.1.0.24,org.apache.spark:spark-avro_2.12:3.5.0,io.github.spark-redshift-community:spark-redshift_2.12:6.2.0-spark_3.5')
-    .getOrCreate()
-)
+```bash
+spark-submit \
+--deploy-mode cluster \
+--master yarn \
+--packages com.amazon.redshift:redshift-jdbc42:2.1.0.29,org.apache.spark:spark-avro_2.12:3.5.1,io.github.spark-redshift-community:spark-redshift_2.12:6.3.0-spark_3.5 \
+main.py
 ```
 
-* **2.2** Set the ``format`` to ``io.github.spark_redshift_community.spark.redshift``.
+> [!NOTE]  
+> `--conf spark.jars.packages` can be used instead of `--packages`.
+
+
+* **2.2** When reading, set the datasource (``format``) to  
+``io.github.spark_redshift_community.spark.redshift``. In Python this is,
         
 ```python
-df = spark.read \
+spark.read \
     .format("io.github.spark_redshift_community.spark.redshift") \
     .option("url", "jdbc:redshift://redshifthost:5439/database?user=username&password=pass") \
-    .option("query", "select x, count(*) my_table group by x") \
+    .option("query", "select x, count(*) from my_table group by x") \
     .option("tempdir", "s3://path/for/temp/data") \
     .load()
 ```
@@ -65,8 +70,8 @@ authentication is something to keep in mind. Different authentication methods be
 
 > [!IMPORTANT] 
 > In cluster mode, AWS credentials must be set for all containers! This can be 
-> achieved by [installing](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) ``aws-cli`` on every container and doing 
-> ``aws configure``.
+> achieved by setting the typical environment variables AWS_ACCESS_KEY_ID, 
+AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION.
 
 
 
