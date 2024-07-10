@@ -1,3 +1,4 @@
 *
 !.gitignore
-!wordcount.py
+!examples
+!ETL_ConfigFile
