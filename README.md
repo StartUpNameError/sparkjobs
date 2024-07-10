@@ -21,12 +21,12 @@ spark-submit --py-files jobs.zip main.py --job <jobName>
 
 # Third-party dependencies
 PySpark provides multiple ways to manage package Python dependencies making
-them avaiable inside jobs. Please visit the Python [Package Management](https://spark.apache.org/docs/latest/api/python/user_guide/python_packaging.html) 
-site.
+them available inside jobs. Please visit the Python [Package Management](https://spark.apache.org/docs/latest/api/python/user_guide/python_packaging.html) 
+site for more details.
 
-However, I find the **Virtualenv** approach the most straight forward. 
-Say you have a virtualenv ``my-env`` created with ``python3 -m venv my-env``. 
-You can package and save it to hdfs with
+However, I find the **Virtualenv** approach the most straightforward. 
+Say you have a virtualenv ``my-env`` created with ``python3 -m venv my-env``,
+you can package and save it to hdfs with
 
 ```bash
 source my-env/bin/activate
@@ -53,7 +53,6 @@ main.py --job <jobName>
 > `--conf spark.yarn.dist.archives` can be used instead of `--archives`.
 
 
-
 # Writing a PySpark Job
 PySpark jobs must be python modules exposing the 
 ``run(spark: SparkSession, **kwargs)`` function.
@@ -69,7 +68,3 @@ jobName = "my-job"
 jobModule = importlib.import_module(f"jobs.{jobName}")
 jobModule.run(spark=spark, **jobArgs)
 ```
-
-
-
-
