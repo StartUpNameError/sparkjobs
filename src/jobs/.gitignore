@@ -1,4 +1,4 @@
 *
 !.gitignore
 !examples
-!ETL_ConfigFile
+!ETL_ConfigFile/*
