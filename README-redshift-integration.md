@@ -51,8 +51,8 @@ main.py
 > `--conf spark.jars.packages` can be used instead of `--packages`.
 
 
-* **2.2** When reading, set the datasource (``format``) to  
-``io.github.spark_redshift_community.spark.redshift``. In Python this is,
+* **2.2** When reading from a redshift url, set the datasource format to  
+``io.github.spark_redshift_community.spark.redshift``.
         
 ```python
 spark.read \
@@ -68,10 +68,7 @@ authentication is something to keep in mind. Different authentication methods be
 [Authenticating with Amazon Redshift integration for Apache Spark](https://docs.aws.amazon.com/emr/latest/ReleaseGuide/emr-spark-redshift-auth.html)
 
 > [!IMPORTANT] 
-> In cluster mode, AWS credentials must be set for all containers! This can be 
-> achieved by setting the typical environment variables AWS_ACCESS_KEY_ID, 
-AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION.
-
+> In cluster mode, AWS credentials must be set in all nodes.
 
 
 ### 3. Edit core-site.xml
