@@ -8,7 +8,7 @@ Such taks can be accomplished using the following instructions.
 
 ### 1. Download Jars
 
-* **1.1** Download Amazon ZIP. Amazon provides a ZIP file containing every needed jar at 
+* **1.1** Download Amazon ZIP file. Amazon provides a ZIP file containing every needed jar at 
 https://docs.aws.amazon.com/redshift/latest/mgmt/jdbc20-install.html.
 Just download and uzip.
 
@@ -20,7 +20,7 @@ rm redshift-jdbc42-2.1.0.29.zip
 ```
 
 
-* **1.2** It is poosible you still need to install the following jars available at 
+* **1.2** It is posible you still need to install the following jars available at 
 the Maven Central repository:
 
     - aws-java-sdk-s3-1.12.741.jar
@@ -37,8 +37,7 @@ wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-dynamodb/1.12.741
 ### 2. Use the RedshiftData Source for Apache Spark - Community Edition
     
 
-* **2.1** Init Spark with the ``packages`` option set to
-``com.amazon.redshift:redshift-jdbc42:2.1.0.24,org.apache.spark:spark-avro_2.12:3.5.0,io.github.spark-redshift-community:spark-redshift_2.12:6.2.0-spark_3.5``.
+* **2.1** Init Spark with the ``packages`` option set to ``com.amazon.redshift:redshift-jdbc42:2.1.0.24,org.apache.spark:spark-avro_2.12:3.5.0,io.github.spark-redshift-community:spark-redshift_2.12:6.2.0-spark_3.5``.
 
 ```bash
 spark-submit \
