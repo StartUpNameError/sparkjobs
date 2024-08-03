@@ -1,9 +1,11 @@
 {
-	"name": "PySpark local cluster",
-    "build": {"context": "..", "dockerfile": "Dockerfile"},
-
+    "name": "PySpark local cluster",
+    "build": {
+        "context": "..",
+        "dockerfile": "Dockerfile"
+    },
     "customizations": {
-        "vscode" : {
+        "vscode": {
             "settings": {
                 "terminal.integrated.profiles.linux": {
                     "bash": {
@@ -16,7 +18,7 @@
             },
             "extensions": [
                 "ms-python.python",
-		        "ms-toolsai.jupyter"
+                "ms-toolsai.jupyter"
             ]
         }
     }
