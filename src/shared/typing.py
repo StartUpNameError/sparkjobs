@@ -1,5 +1,4 @@
 """
-Custom typing. 
 Variables defined here are used across the library for type hint.
 """
 

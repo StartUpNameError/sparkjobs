@@ -15,10 +15,10 @@ Quisque arcu nunc, feugiat ut mi quis, blandit varius elit. Quisque ullamcorper 
 """
 
 
-def run(spark: SparkSession):
+def run(spark: SparkSession, partitions: int | None = None):
 
     sc = spark.sparkContext
-    words = sc.parallelize(text.split())
+    words = sc.parallelize(text.split(), numSlices=partitions)
 
     counts = (
         words.flatMap(lambda line: line.split(" "))

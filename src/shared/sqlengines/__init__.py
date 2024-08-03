@@ -1,22 +1,25 @@
-from typing import Any, Literal
+from typing import Any
 
 from shared.sqlengine import SQLEngine
 from shared.sqlengines._pandas import PandasSQLEngine
-from shared.sqlengines._spark import SparkRedshiftEngine, SparkSQLEngine
+from shared.sqlengines._spark import SparkSQLEngine
 
-SQLEngineNames = Literal["spark", "spark-redshift", "pandas"]
+__all__ = ["get_sql_engine", "SQLEngine"]
 
 
 def get_sql_engine(
-    name: SQLEngineNames,
+    name: str,
     initargs: dict[str, Any] | None = None,
 ) -> SQLEngine:
-    """Retrieves SQLEngine class from name.
+    """Retrieves SQLEngine instance from name.
 
     Parameters
     ----------
-    name : str, {"spark", "spark-redshift", "pandas"}
+    name : str, {"spark", "pandas"}
         SQL engine to return.
+
+    initargs: dict or None, default=None
+        Arguments used to construct instance.
 
     Returns
     --------
@@ -32,20 +35,10 @@ def get_sql_engine(
 
     name_to_engine: dict[str, SQLEngine] = {
         "spark": SparkSQLEngine,
-        "spark-redshift": SparkSQLEngine,
         "pandas": PandasSQLEngine,
     }
 
     if name not in name_to_engine:
-        raise ValueError()
+        raise ValueError(f"SQLEngine `{name}` not found.")
 
     return name_to_engine[name](**initargs)
-
-
-__all__ = [
-    "get_sql_engine",
-    "SQLEngine",
-    "PandasSQLEngine",
-    "SparkSQLEngine",
-    "SparkRedshiftEngine",
-]
