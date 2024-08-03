@@ -3,8 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-import yaml
-
+from shared.fileloaders import YAMLFileLoader
 from shared.instantiator import Instatiator
 
 
@@ -28,9 +27,10 @@ class ConfigParser:
         yamfile,
         context: dict[str, Any] | None = None,
     ) -> ConfigParser:
-        with open(yamfile) as stream:
-            data = yaml.safe_load(stream)
-            return cls(data=data, context=context)
+
+        loader = YAMLFileLoader()
+        data = loader.load(file_path=yamfile)
+        return cls(data=data, context=context)
 
     def parse_one(self, o: Deserializable) -> Any:
         kwargs = o.kwargs or {}
