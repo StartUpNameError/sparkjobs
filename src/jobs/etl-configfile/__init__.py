@@ -8,10 +8,9 @@ to the user's need.
 
 Usage example:
 
-spark-submit \
---master yarn \
---deploy-mode cluster \
-main.py --job ETL_ConfigFile -A config=<path-to-configfile>
+spark-submit main.py --job etl-config-file --job-args config=<path-to-configfile>
 """
+
+__all__ = ["run"]
 
 from ._run import run

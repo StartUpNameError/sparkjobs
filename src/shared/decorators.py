@@ -4,8 +4,7 @@ from typing import Any, Callable
 def arg_callback(
     arg: str, func: Callable[[Any], Any], func_kw_args: dict | None = None
 ) -> Callable:
-    """Makes decorator that preprocesses function argument ``arg`` using
-    the specified callback function ``func``.
+    """Preprocesses function argument `arg` using the specified callback function.
 
     Parameters
     ----------
@@ -27,9 +26,6 @@ def arg_callback(
         func_kw_args = {}
 
     def decorator(fn: Callable):
-        """Preprocesses function argument using the specified preprocessing
-        function.
-        """
 
         def inner(*args, **kwargs):
 

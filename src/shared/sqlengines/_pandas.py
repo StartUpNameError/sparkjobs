@@ -1,5 +1,4 @@
 import pandas as pd
-from sqlalchemy.engine import create_engine
 
 from shared.sqlengine import SQLEngine
 from shared.url import URL
@@ -15,5 +14,4 @@ class PandasSQLEngine(SQLEngine):
         super().__init__()
 
     def read_sql(self, sql: str, url: URL) -> pd.DataFrame:
-        con = create_engine(url=url.as_string())
-        return pd.read_sql(sql=sql, con=con)
+        return pd.read_sql(sql=sql, con=url.as_string())

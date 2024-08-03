@@ -14,7 +14,7 @@ class MissingOption(KeyError):
     def __repr__(self):
         msg = """\
         Missing option `{0}`. Please set this option through the `option`
-        method or as keyword argument in `load`.\
+        method.\
         """
 
         return msg.format(self.option)
