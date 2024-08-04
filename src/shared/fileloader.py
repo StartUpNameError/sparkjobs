@@ -35,12 +35,13 @@ class FileLoader:
         # By default the file will be opened with locale encoding on Python 3.
         # We specify "utf8" here to ensure the correct behavior.
         full_path = file_path + self.ext
+        print(f'Full path: {full_path}')
         with self.open_method(full_path, "rb") as fp:
             payload = fp.read().decode("utf-8")
 
         return self.loader(payload, **kw_args)
 
-    def load(self, file_path: str) -> Any | None:
+    def load(self, file_path: str, kw_args: dict | None = None) -> Any | None:
         """Attempt to load the file path.
 
         Parameters
@@ -53,7 +54,7 @@ class FileLoader:
         data : dict
             The loaded data if it exists, otherwise None.
         """
-        data = self._load_file(file_path, self.open_method)
+        data = self._load_file(file_path, kw_args=kw_args)
         if data is not None:
             return data
         return None

@@ -10,4 +10,4 @@ class JSONFileLoader(FileLoader):
     """
 
     def __init__(self):
-        super().__init__(loader=json.load, ext=".json", open_method=open)
+        super().__init__(loader=json.loads, ext=".json", open_method=open)
