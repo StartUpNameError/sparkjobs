@@ -3,15 +3,13 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
-
+# Dist
+dist/
+build/
+*.egg-info/
 
 # Python virtualenv
 venv/
-
-# Node artifact files
-node_modules/
-dist/
-build/
 
 # Compiled Java class files
 *.class

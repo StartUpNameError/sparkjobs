@@ -1,9 +1,0 @@
-sqlalchemy<2.0
-sparkml_base_classes
-pypika==0.48.9
-boto3==1.34.136
-pandas<2.0.0
-numpy<2.0.0
-pyspark>=3.5.0
-pyyaml
-pytest
