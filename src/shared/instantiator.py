@@ -66,15 +66,37 @@ class InitArgsGetter:
 
 
 class Instatiator:
+    """Generic object instantiator.
+
+    Parameters
+    ----------
+    context : dict, str -> Any
+        Context dictionary from which __init__ args will be inferred.
+    """
 
     def __init__(self, context: dict[str, Any]) -> None:
         self.context = context
 
         self._initargs_getter = InitArgsGetter(self.context)
 
-    def instantiate(self, clspath: str, **kwargs) -> Any:
+    def instantiate(self, clspath: str, context: dict[str, Any] | None = None) -> Any:
+        """Instantiates type located at `clspath`.
+
+        Parameters
+        ----------
+        clspath : str
+            Path, in dot notation format, of the class to instantiate.
+
+        context : dict, str -> Any
+            Additional context args from which also infer __init__ args.
+
+
+        Returns
+        -------
+        object: Any
+        """
         cls = pydoc.locate(clspath)
-        initargs = self.get_initargs(cls, **kwargs)
+        initargs = self.get_initargs(cls, context)
         return cls(**initargs)
 
     def get_initargs(
@@ -85,7 +107,7 @@ class Instatiator:
         Parameters
         ----------
         cls : Type[Any]
-            Class whose __init__ parameters will be obtained base on the context.
+            Class whose __init__ parameters will be obtained based on the context.
 
         context : dict, str -> Any
             Additional context args from which also infer __init__ args.
