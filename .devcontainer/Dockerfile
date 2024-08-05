@@ -12,7 +12,6 @@ RUN apt update -y && apt upgrade -y
 RUN xargs apt-get -y install < /tmp/os-tmp/packages.txt && rm -rf /tmp/os-tmp
 USER ${NB_UID}
 
-
 # you can add additional libraries you want mamba to install by listing them below the first line and ending with "&& \"
 RUN mamba create --yes -p "${CONDA_DIR}/envs/${conda_env}" python=${py_ver} ipython ipykernel && \
     mamba clean --all -f -y

@@ -2,45 +2,45 @@ from __future__ import annotations
 
 import inspect
 import pydoc
-from types import SimpleNamespace
 from typing import Any, Type
 
 __all__ = ("Instatiator",)
 
 
-class InitArgsInference:
+class InitArgsGetter:
     """Infers __init__ parameters.
 
     Parameters
     ----------
-    context : Any
-        Context object from which __init__ parameters values will be inferred.
-
-    kwargs : key-word arguments
-        Additional arguments from which to also infer __init__ parameters.
+    context : dict, str -> Any
+        Context dictionary from which __init__ args will be inferred.
     """
 
-    def __init__(self, context: Any, **kwargs):
+    def __init__(self, context: dict[str, Any]):
         self.context = context
-        self.kwargs = kwargs
 
-    def infer(self, cls: Type[Any]) -> dict[str, Any]:
-        """Infers __init__ parameters for ``cls``.
+    def get(
+        self, cls: Type[Any], context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        """Infers __init__ parameters for type `cls`.
 
         Parameters
         ----------
         cls : Type[Any]
-            Class whose __init__ parameters will be obtained base on ``obj``.
+            Class whose __init__ parameters will be obtained base on the context.
+
+        context : dict, str -> Any
+            Additional context args from which also infer __init__ args.
 
         Returns
         -------
-        parameters : dict
+        initargs : dict
         """
-        init_signature = self.get_init_signature(cls)
-        parameters = self._get_init_kwargs(init_signature)
-        return parameters
+        init_signature = self._get_init_signature(cls)
+        initargs = self._get_initargs(init_signature, context=context)
+        return initargs
 
-    def get_init_signature(self, cls: Type[Any]) -> inspect.Signature:
+    def _get_init_signature(self, cls: Type[Any]) -> inspect.Signature:
         """Retrieves __init__ signature from ``cls``.
 
         Parameters
@@ -54,29 +54,44 @@ class InitArgsInference:
         init = getattr(cls.__init__, "deprecated_original", cls.__init__)
         return inspect.signature(init)
 
-    def _get_init_kwargs(self, init_signature):
-        """Returns init kwargs inferred from :attr:`context`."""
-        context_dict = {**self.context.__dict__, **self.kwargs}
-        return {
-            k: v
-            for k, v in context_dict.items()
-            if k in init_signature.parameters
-        }
+    def _get_initargs(
+        self, init_signature, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        """Returns init kwargs inferred from context."""
+        if context is None:
+            context = {}
+
+        context = {**self.context, **context}
+        return {k: v for k, v in context.items() if k in init_signature.parameters}
 
 
 class Instatiator:
 
-    def __init__(self, context: Any) -> None:
+    def __init__(self, context: dict[str, Any]) -> None:
         self.context = context
 
-    @classmethod
-    def from_dict(cls, d: dict[str, Any]) -> Instatiator:
-        return cls(context=SimpleNamespace(**d))
+        self._initargs_getter = InitArgsGetter(self.context)
 
     def instantiate(self, clspath: str, **kwargs) -> Any:
         cls = pydoc.locate(clspath)
         initargs = self.get_initargs(cls, **kwargs)
         return cls(**initargs)
 
-    def get_initargs(self, cls: Type, **kwargs) -> dict[str, Any]:
-        return InitArgsInference(self.context, **kwargs).infer(cls)
+    def get_initargs(
+        self, cls: Type[Any], context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
+        """Infers __init__ parameters for type `cls`.
+
+        Parameters
+        ----------
+        cls : Type[Any]
+            Class whose __init__ parameters will be obtained base on the context.
+
+        context : dict, str -> Any
+            Additional context args from which also infer __init__ args.
+
+        Returns
+        -------
+        initargs : dict, str -> Any
+        """
+        return self._initargs_getter.get(cls, context=context)
