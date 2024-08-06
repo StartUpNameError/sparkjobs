@@ -10,7 +10,7 @@ from shared.instantiator import Instatiator
 @dataclass
 class Deserializable:
     name: str
-    path: str
+    clspath: str
     kwargs: dict[str, str] | None = None
 
 
@@ -19,7 +19,7 @@ class ConfigParser:
         self.data = data
         self.context = context or {}
 
-        self._factory = Instatiator.from_dict(self.context)
+        self._instantiator = Instatiator(context)
 
     @classmethod
     def from_yaml(
@@ -33,8 +33,7 @@ class ConfigParser:
         return cls(data=data, context=context)
 
     def parse_one(self, o: Deserializable) -> Any:
-        kwargs = o.kwargs or {}
-        return self._factory.instantiate(clspath=o.path, **kwargs)
+        return self._instantiator.instantiate(clspath=o.clspath)
 
     def parse(self, key: str) -> dict[str, Any]:
 

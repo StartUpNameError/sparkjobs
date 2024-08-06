@@ -53,11 +53,11 @@ def main():
     # Resolve user args.
     job_name = parsed_args.job_name
     job_args = resolve_args(args=parsed_args.job_args)
-    print(f"Called job: {job_name} with arguments: {job_args}")
+    print(f"Called job `{job_name}` with arguments: {job_args}")
 
     spark = SparkSession.builder.appName(f"{job_name}").getOrCreate()
 
-    job_module = importlib.import_module("jobs.{job_name}")
+    job_module = importlib.import_module(f"jobs.{job_name}")
     job_module.run(spark, **job_args)
 
 
