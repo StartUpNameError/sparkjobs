@@ -50,13 +50,13 @@ jobs:
     runs-on: ubuntu-latest
     
     needs:
-      - release-build
+      - build
 
     steps:
       - name: Retrieve distribution
         uses: actions/download-artifact@v4
         with:
-          name: build
+          name: dist
           path: dist/
     
       - name: Upload to S3
