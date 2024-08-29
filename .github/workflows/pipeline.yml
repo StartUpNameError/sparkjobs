@@ -1,0 +1,25 @@
+name: Upload to S3
+
+on:
+  push:
+    branches:
+      - master 
+  tags:
+    - v*
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      
+      - name: Build
+        run: make build
+
+      - name: Upload
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist-directory
+          path: dist/
