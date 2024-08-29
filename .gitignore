@@ -9,7 +9,7 @@ build/
 *.egg-info/
 
 # Python virtualenv
-venv/
+.venv/
 
 # Compiled Java class files
 *.class
