@@ -22,7 +22,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: dist/
+          path: dist
 
       - name: Upload to S3
         uses: shallwefootball/s3-upload-action@master
@@ -31,3 +31,4 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_KEY}}
           aws_bucket: pyspark-boilerplate
           source_dir: dist
+          destination_dir: dist
